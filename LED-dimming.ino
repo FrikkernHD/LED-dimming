@@ -5,7 +5,7 @@
 const int lightsON = 8;										// LightsON er satt til pinne 8
 const int lightsOFF = 7;									// LightsOFF er satt til pinne 7
 const int led = 10;											// LED er satt til pinne 10 som støtter PWM
-const int fadingDelay = 50;									// Bestemmer hvor lang tid det tar mellom hver for-loop i dimmeprosessen (målt i ms)
+const int fadingDelay = 20;									// Bestemmer hvor lang tid det tar mellom hver for-loop i dimmeprosessen (målt i ms)
 const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;	// Alle pinnene på Arduino-en definert her er til bruk på LCD
 unsigned long turnOnDelay = 1500;							// Bestemmer hvor mange ms lightsON må holdes inne for at lysstyrken skal økes
 unsigned long turnOffDelay = 1500;							// Bestemmer hvor mange ms lightsOFF må holdes inne for at lysstyrken skal minskes
@@ -49,10 +49,10 @@ void loop() {
 	if (lightsONState == LOW) {																// Siden lightsON er av typen INPUT_PULLUP må verdien være LOW for å fortsette
 		if (ledState == false) {															// Fortsetter bare hvis fadingState er FALSE
 			if ((unsigned long)(currentMillis - lightsONPushedMillis) >= turnOnDelay) {		// Fortsetter bare hvis lengden av loopen - lengden av lightsONPushedMillis (målt i ms) er mer enn turnOnDelay (1 sek)
-				lcd.clear();
-				lcd.setCursor(0, 0);
-				lcd.print("Turning on LED!");												// Denne kjører bare når lightsON er aktivert, og sier at LED skrur seg på
 				for (int fade = 0; fade <= 255; fade += 5) {								// Kjører for-loopen helt til fade-verdien er større eller lik 255 (fullt på analogt)
+					lcd.clear();
+					lcd.setCursor(0, 0);
+					lcd.print("Turning on LED!");												// Denne kjører bare når lightsON er aktivert, og sier at LED skrur seg på					
 					lcd.setCursor(0, 1);
 					lcd.print("FADE-value: ");
 					lcd.setCursor(12, 1);
@@ -73,10 +73,10 @@ void loop() {
 	if (lightsOFFState == LOW) {															// Siden lightsOFF er av typen INPUT_PULLUP må verdien være LOW for å fortsette
 		if (ledState == true) {																// Fortsetter bare hvis fadingState er TRUE
 			if ((unsigned long)(currentMillis - lightsOFFPushedMillis) >= turnOffDelay) {	// Fortsetter bare hvis lengden av loopen - lengden av lightsOFFPushedMillis (målt i ms) er mer enn turnOffDelay (1 sek)
-				lcd.clear();
-				lcd.setCursor(0, 0);
-				lcd.print("Turning off LED!");												// Denne kjører bare når lightsOFF er aktivert, og sier at LED skrur seg av
 				for (int fade = 255; fade >= 0; fade -= 5) {								// Kjører for-loopen helt til fade-verdien er mindre eller lik 0 (minst på analogt)
+					lcd.clear();
+					lcd.setCursor(0, 0);
+					lcd.print("Turning off LED!");											// Denne kjører bare når lightsOFF er aktivert, og sier at LED skrur seg av
 					lcd.setCursor(0, 1);
 					lcd.print("FADE-value: ");	
 					lcd.setCursor(12, 1);
