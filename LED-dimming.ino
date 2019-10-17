@@ -1,24 +1,34 @@
-// Alle CONST-variabler endrer seg aldri i koden
-const int lightsON = 12;					// LightsON er satt til pinne 12
-const int lightsOFF = 4;					// LightsOFF er satt til pinne 4
-const int led = 10;							// LED er satt til pinne 10 som støtter PWM
-const int fadingDelay = 20;					// Bestemmer hvor lang tid det tar mellom hver for-loop i dimmeprosessen (målt i ms)
 
-unsigned long lightsONPushedMillis;			// Blir brukt til å telle hvor mange ms lightsON er aktivert
-unsigned long lightsOFFPushedMillis;		// Blir brukt til å telle hvor mange ms lightsOFF er aktivert
-unsigned long turnOnDelay = 1500;			// Bestemmer hvor mange ms lightsON må holdes inne for at lysstyrken skal økes
-unsigned long turnOffDelay = 1500;			// Bestemmer hvor mange ms lightsOFF må holdes inne for at lysstyrken skal minskes
+#include <LiquidCrystal.h>									// Inkluder LiquidCrystal-biblioteket for support for LCD
+
+// Alle CONST-variabler endrer seg aldri i koden
+const int lightsON = 8;										// LightsON er satt til pinne 8
+const int lightsOFF = 7;									// LightsOFF er satt til pinne 7
+const int led = 10;											// LED er satt til pinne 10 som støtter PWM
+const int fadingDelay = 20;									// Bestemmer hvor lang tid det tar mellom hver for-loop i dimmeprosessen (målt i ms)
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;	// Alle pinnene på Arduino-en definert her er til bruk på LCD
+unsigned long turnOnDelay = 1500;							// Bestemmer hvor mange ms lightsON må holdes inne for at lysstyrken skal økes
+unsigned long turnOffDelay = 1500;							// Bestemmer hvor mange ms lightsOFF må holdes inne for at lysstyrken skal minskes
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);					// Definerer at alle pinnene som sdkal brukes av LCD kan brukes av LiquidCrystal-biblioteket
 
 // Variabler som kommer til å endre seg
-int lightsONState = 0;						// Blir brukt til å lese og lagre lightsON-state
-int lightsOFFState = 0;						// Blir brukt til å lese og lagre lightsOFF-state
-boolean ledState = false;					// Minne for om LED er på eller av
+unsigned long lightsONPushedMillis;							// Blir brukt til å telle hvor mange ms lightsON er aktivert
+unsigned long lightsOFFPushedMillis;						// Blir brukt til å telle hvor mange ms lightsOFF er aktivert
+int lightsONState = 0;										// Blir brukt til å lese og lagre lightsON-state
+int lightsOFFState = 0;										// Blir brukt til å lese og lagre lightsOFF-state
+boolean ledState = false;									// Minne for om LED er på eller av
 
 void setup() {
-	pinMode(led, OUTPUT);					// LED er satt som OUTPUT
-	pinMode(lightsON, INPUT_PULLUP);		// LightsON er satt som INPUT_PULLUP
-	pinMode(lightsOFF, INPUT_PULLUP);		// LightsOFF er satt som INPUT_PULLUP
-	digitalWrite(led, LOW);					// Tvinger LED av i starten
+	pinMode(led, OUTPUT);									// LED er satt som OUTPUT
+	pinMode(lightsON, INPUT_PULLUP);						// LightsON er satt som INPUT_PULLUP
+	pinMode(lightsOFF, INPUT_PULLUP);						// LightsOFF er satt som INPUT_PULLUP
+	digitalWrite(led, LOW);									// Tvinger LED av i starten
+	digitalWrite(13, LOW);									// Slår av inkludert LED
+
+	lcd.clear();											// Tømmer LCD for å ikke ha noen rare glitcher
+	lcd.begin(16, 2);										// Definerer hvor mange rader og kolonner LCD har
+	lcd.setCursor(0, 0);
+	lcd.print("LED is off!");								// Siden LED alltid er slått av i starten kan vi statisk skrive at LED er av
 }
 
 void loop() {
@@ -37,11 +47,16 @@ void loop() {
 	if (lightsONState == LOW) {																// Siden lightsON er av typen INPUT_PULLUP må verdien være LOW for å fortsette
 		if (ledState == false) {															// Fortsetter bare hvis fadingState er FALSE
 			if ((unsigned long)(currentMillis - lightsONPushedMillis) >= turnOnDelay) {		// Fortsetter bare hvis lengden av loopen - lengden av lightsONPushedMillis (målt i ms) er mer enn turnOnDelay (1 sek)
+				lcd.setCursor(0, 0);
+				lcd.print("Turning on LED!");												// Denne kjører bare når lightsON er aktivert, og sier at LED skrur seg på
 				for (int fade = 0; fade <= 255; fade += 5) {								// Kjører for-loopen helt til fade-verdien er større eller lik 255 (fullt på analogt)
 					analogWrite(led, fade);													// Skriver gjeldene fade-verdi til LED
 					delay(fadingDelay);														// Venter en liten stund før for-loopen restarter for å gi en fade-lignende økning av lysstyrke
 				}
 				ledState = !ledState;														// Gjør om ledState-verdien til det omvendte av det den var
+				lcd.clear();																// Tømmer LCD for å ikke ha noen rare glitcher
+				lcd.setCursor(0, 0);
+				lcd.print("LED is on!");													// Skriver at LED er på. Beskjeden vil holde seg på skjermen til LED slår seg av igjen
 			}
 		}
 	}
@@ -49,11 +64,16 @@ void loop() {
 	if (lightsOFFState == LOW) {															// Siden lightsOFF er av typen INPUT_PULLUP må verdien være LOW for å fortsette
 		if (ledState == true) {																// Fortsetter bare hvis fadingState er TRUE
 			if ((unsigned long)(currentMillis - lightsOFFPushedMillis) >= turnOffDelay) {	// Fortsetter bare hvis lengden av loopen - lengden av lightsOFFPushedMillis (målt i ms) er mer enn turnOffDelay (1 sek)
+				lcd.setCursor(0, 0);
+				lcd.print("Turning off LED!");												// Denne kjører bare når lightsOFF er aktivert, og sier at LED skrur seg av
 				for (int fade = 255; fade >= 0; fade -= 5) {								// Kjører for-loopen helt til fade-verdien er mindre eller lik 0 (minst på analogt)
 					analogWrite(led, fade);													// Skriver gjeldene fade-verdi til LED
 					delay(fadingDelay);														// Venter en liten stund før for-loopen restarter for å gi en fade-lignende dimming av lysstyrke
 				}
 				ledState = !ledState;														// Gjør om ledState-verdien til det omvendte av det den var
+				lcd.clear();																// Tømmer LCD for å ikke ha noen rare glitcher
+				lcd.setCursor(0, 0);
+				lcd.print("LED is off!");													// Skriver at LED er av. Beskjeden vil holde seg på skjermen til LED slår seg på igjen
 			}
 		}
 	}
