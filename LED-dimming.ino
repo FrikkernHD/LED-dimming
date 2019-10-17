@@ -6,8 +6,8 @@ const int fadingDelay = 20;					// Bestemmer hvor lang tid det tar mellom hver f
 
 unsigned long lightsONPushedMillis;			// Blir brukt til å telle hvor mange ms lightsON er aktivert
 unsigned long lightsOFFPushedMillis;		// Blir brukt til å telle hvor mange ms lightsOFF er aktivert
-unsigned long turnOnDelay = 1000;			// Bestemmer hvor mange ms lightsON må holdes inne for at lysstyrken skal økes
-unsigned long turnOffDelay = 1000;			// Bestemmer hvor mange ms lightsOFF må holdes inne for at lysstyrken skal minskes
+unsigned long turnOnDelay = 1500;			// Bestemmer hvor mange ms lightsON må holdes inne for at lysstyrken skal økes
+unsigned long turnOffDelay = 1500;			// Bestemmer hvor mange ms lightsOFF må holdes inne for at lysstyrken skal minskes
 
 // Variabler som kommer til å endre seg
 int lightsONState = 0;						// Blir brukt til å lese og lagre lightsON-state
