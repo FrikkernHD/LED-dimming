@@ -58,9 +58,11 @@ void loop() {
 			lcd.setCursor(0, 0);
 			lcd.print("Counting...");
 			lcd.setCursor(0, 1);
-			lcd.print("Seconds: ");
+			lcd.print("Counter: ");
 			lcd.setCursor(9, 1);
 			lcd.print(counter, 1);															// Skriver antall sekunder lightsON er aktivert til LCD
+			lcd.setCursor(12, 1);
+			lcd.print("s");
 			delay(100);																		// Smoother ut printout til LCD
 
 			if (digitalRead(lightsON) == HIGH) {											// Hvis lightsON slippes under tellingen vil telleren bli borte og gammel tekst vil komme tilbake
@@ -103,9 +105,11 @@ void loop() {
 			lcd.setCursor(0, 0);
 			lcd.print("Counting...");
 			lcd.setCursor(0, 1);
-			lcd.print("Seconds: ");
+			lcd.print("Counter: ");
 			lcd.setCursor(9, 1);
 			lcd.print(counter, 1);															// Skriver antall sekunder lightsON er aktivert til LCD
+			lcd.setCursor(12, 1);
+			lcd.print("s");
 			delay(100);																		// Smoother ut printout til LCD
 
 			if (digitalRead(lightsOFF) == HIGH) {											// Hvis lightsOFF slippes under tellingen vil telleren bli borte og gammel tekst vil komme tilbake
