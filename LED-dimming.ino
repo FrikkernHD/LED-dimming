@@ -56,11 +56,12 @@ void loop() {
 			counter = round(counter * 10.0) / 10.0;											// Runder av COUNTER til bare en desimal
 			lcd.clear();
 			lcd.setCursor(0, 0);
-			lcd.print("Counting: ");
+			lcd.print("Counting...");
 			lcd.setCursor(0, 1);
 			lcd.print("Seconds: ");
 			lcd.setCursor(9, 1);
 			lcd.print(counter, 1);															// Skriver antall sekunder lightsON er aktivert til LCD
+			delay(100);																		// Smoother ut printout til LCD
 
 			if (digitalRead(lightsON) == HIGH) {											// Hvis lightsON slippes under tellingen vil telleren bli borte og gammel tekst vil komme tilbake
 				lcd.clear();
@@ -100,11 +101,12 @@ void loop() {
 			counter = round(counter * 10.0) / 10.0;											// Runder av COUNTER til bare en desimal
 			lcd.clear();
 			lcd.setCursor(0, 0);
-			lcd.print("Counting: ");
+			lcd.print("Counting...");
 			lcd.setCursor(0, 1);
 			lcd.print("Seconds: ");
 			lcd.setCursor(9, 1);
 			lcd.print(counter, 1);															// Skriver antall sekunder lightsON er aktivert til LCD
+			delay(100);																		// Smoother ut printout til LCD
 
 			if (digitalRead(lightsOFF) == HIGH) {											// Hvis lightsOFF slippes under tellingen vil telleren bli borte og gammel tekst vil komme tilbake
 				lcd.clear();
