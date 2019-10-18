@@ -1,5 +1,5 @@
 # LED-dimming
-Selve koden som er viktig ligger i .ino-filen.
+Selve koden i .ino-filen. For at LCD skal fungere trengs også LiquidDisplay.h under "__vm". 
 
 I dette prosjektet har vi to knapper og en LED.
 Ved å holde inne en knapp i 1.5 sekunder vil LED slå seg sakte på.
