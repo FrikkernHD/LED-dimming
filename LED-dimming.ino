@@ -51,16 +51,24 @@ void loop() {
 
 	if (lightsONState == LOW) {																// Siden lightsON er av typen INPUT_PULLUP må verdien være LOW for å fortsette
 		if (ledState == false) {															// Fortsetter bare hvis fadingState er FALSE
-			counter = (currentMillis - lightsONPushedMillis);
-			counter = counter / 1000;
-			counter = round(counter * 10.0) / 10.0;
+			counter = (currentMillis - lightsONPushedMillis);								// Lagrer antall ms lightsON er aktivert i COUNTER
+			counter = counter / 1000;														// Endrer COUNTER fra ms til sekunder
+			counter = round(counter * 10.0) / 10.0;											// Runder av COUNTER til bare en desimal
 			lcd.clear();
 			lcd.setCursor(0, 0);
 			lcd.print("Counting: ");
 			lcd.setCursor(0, 1);
 			lcd.print("Seconds: ");
 			lcd.setCursor(9, 1);
-			lcd.print(counter, 1);
+			lcd.print(counter, 1);															// Skriver antall sekunder lightsON er aktivert til LCD
+
+			if (digitalRead(lightsON) == HIGH) {											// Hvis lightsON slippes under tellingen vil telleren bli borte og gammel tekst vil komme tilbake
+				lcd.clear();
+				lcd.setCursor(0, 0);
+				lcd.print("LED is off!");
+				lcd.setCursor(0, 1);
+				lcd.print("FADE-value: 0");
+			}
 
 			if ((unsigned long)(currentMillis - lightsONPushedMillis) >= turnOnDelay) {		// Fortsetter bare hvis lengden av loopen - lengden av lightsONPushedMillis (målt i ms) er mer enn turnOnDelay (1 sek)
 				for (int fade = 0; fade <= 255; fade += 5) {								// Kjører for-loopen helt til fade-verdien er større eller lik 255 (fullt på analogt)
@@ -75,7 +83,7 @@ void loop() {
 					delay(fadingDelay);														// Venter en liten stund før for-loopen restarter for å gi en fade-lignende økning av lysstyrke
 				}
 				ledState = !ledState;														// Gjør om ledState-verdien til det omvendte av det den var
-				counter = 0;
+				counter = 0;																// Resetter COUNTER til null
 				lcd.clear();																// Tømmer LCD for å ikke ha noen rare glitcher
 				lcd.setCursor(0, 0);
 				lcd.print("LED is on!");													// Skriver at LED er på. Beskjeden vil holde seg på skjermen til LED slår seg av igjen
@@ -87,16 +95,24 @@ void loop() {
 
 	if (lightsOFFState == LOW) {															// Siden lightsOFF er av typen INPUT_PULLUP må verdien være LOW for å fortsette
 		if (ledState == true) {																// Fortsetter bare hvis fadingState er TRUE
-			counter = (currentMillis - lightsOFFPushedMillis);
-			counter = counter / 1000;
-			counter = round(counter * 10.0) / 10.0;
+			counter = (currentMillis - lightsOFFPushedMillis);								// Lagrer antall ms lightsON er aktivert i COUNTER
+			counter = counter / 1000;														// Endrer COUNTER fra ms til sekunder
+			counter = round(counter * 10.0) / 10.0;											// Runder av COUNTER til bare en desimal
 			lcd.clear();
 			lcd.setCursor(0, 0);
 			lcd.print("Counting: ");
 			lcd.setCursor(0, 1);
 			lcd.print("Seconds: ");
 			lcd.setCursor(9, 1);
-			lcd.print(counter, 1);
+			lcd.print(counter, 1);															// Skriver antall sekunder lightsON er aktivert til LCD
+
+			if (digitalRead(lightsOFF) == HIGH) {											// Hvis lightsOFF slippes under tellingen vil telleren bli borte og gammel tekst vil komme tilbake
+				lcd.clear();
+				lcd.setCursor(0, 0);
+				lcd.print("LED is on!");
+				lcd.setCursor(0, 1);
+				lcd.print("FADE-value: 255");
+			}
 
 			if ((unsigned long)(currentMillis - lightsOFFPushedMillis) >= turnOffDelay) {	// Fortsetter bare hvis lengden av loopen - lengden av lightsOFFPushedMillis (målt i ms) er mer enn turnOffDelay (1 sek)
 				for (int fade = 255; fade >= 0; fade -= 5) {								// Kjører for-loopen helt til fade-verdien er mindre eller lik 0 (minst på analogt)
@@ -111,7 +127,7 @@ void loop() {
 					delay(fadingDelay);														// Venter en liten stund før for-loopen restarter for å gi en fade-lignende dimming av lysstyrke
 				}
 				ledState = !ledState;														// Gjør om ledState-verdien til det omvendte av det den var
-				counter = 0;
+				counter = 0;																// Resetter COUNTER til null
 				lcd.clear();																// Tømmer LCD for å ikke ha noen rare glitcher
 				lcd.setCursor(0, 0);
 				lcd.print("LED is off!");													// Skriver at LED er av. Beskjeden vil holde seg på skjermen til LED slår seg på igjen
